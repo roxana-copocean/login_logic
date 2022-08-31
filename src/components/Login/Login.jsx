@@ -3,13 +3,8 @@ import React, { useState, useEffect, useReducer } from 'react';
 import Card from '../UI/Card/Card';
 import classes from './Login.module.css';
 import Button from '../UI/Button/Button';
-import { type } from '@testing-library/user-event/dist/type';
 
 const Login = (props) => {
-	// const [ enteredEmail, setEnteredEmail ] = useState('');
-	// const [ emailIsValid, setEmailIsValid ] = useState();
-	// const [ enteredPassword, setEnteredPassword ] = useState('');
-	// const [ passwordIsValid, setPasswordIsValid ] = useState();
 	const [ formIsValid, setFormIsValid ] = useState(false);
 
 	const [ emailState, dispatchEmail ] = useReducer(
@@ -38,28 +33,29 @@ const Login = (props) => {
 		{ value: '', isValid: null }
 	);
 
-	// useEffect(
-	// 	() => {
-	// 		const identifier = setTimeout(() => {
-	// 			setFormIsValid(enteredEmail.includes('@') && enteredPassword.trim().length > 6);
-	// 		}, 500);
+	// Alias Assignment - so we rename isValid ->
+	const { isValid: emailIsValid } = emailState;
+	const { isValid: passIsValid } = passwordState;
 
-	// 		return () => {
-	// 			clearTimeout(identifier);
-	// 		};
-	// 	},
-	// 	[ enteredEmail, enteredPassword ]
-	// );
+	useEffect(
+		() => {
+			const identifier = setTimeout(() => {
+				setFormIsValid(emailIsValid && passIsValid);
+			}, 500);
+
+			return () => {
+				clearTimeout(identifier);
+			};
+		},
+		[ emailIsValid, passIsValid ]
+	);
 
 	const emailChangeHandler = (event) => {
 		dispatchEmail({ type: 'USER_INPUT', val: event.target.value });
-		setFormIsValid(event.target.value.includes('@') && passwordState.isValid);
 	};
 
 	const passwordChangeHandler = (event) => {
 		dispatchPassword({ type: 'USER_INPUT', val: event.target.value });
-		// setEnteredPassword(event.target.value);
-		setFormIsValid(emailState.isValid && passwordState.isValid);
 	};
 
 	const validateEmailHandler = () => {
